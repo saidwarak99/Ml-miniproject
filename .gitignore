@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Models and temp files
+*.joblib
+*.pkl
+scratch/
+.system_generated/
+
+# OS
+.DS_Store
+Thumbs.db

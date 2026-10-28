@@ -1,0 +1,141 @@
+{
+  "generated_at": "2026-10-28T20:45:33.043611",
+  "best_model": "Support Vector Machine",
+  "best_cv_f1": 0.9205578627093756,
+  "class_distribution": {
+    "Higher Grade (>=10)": 549,
+    "Higher Grade Ratio": 84.59,
+    "Lower Grade (<10)": 100,
+    "Lower Grade Ratio": 15.41
+  },
+  "models": [
+    {
+      "Model": "Support Vector Machine",
+      "Accuracy": 0.8307692307692308,
+      "Precision": 0.860655737704918,
+      "Recall": 0.9545454545454546,
+      "F1-Score": 0.9051724137931034,
+      "Macro F1": 0.5597290640394088,
+      "ROC-AUC": 0.6690909090909092,
+      "CV F1 (Mean)": 0.9205578627093756,
+      "CV F1 (Std)": 0.012658470986255606,
+      "CV Acc (Mean)": 0.85739357729649,
+      "CV Acc (Std)": 0.022423489200837615
+    },
+    {
+      "Model": "Logistic Regression",
+      "Accuracy": 0.7923076923076923,
+      "Precision": 0.8672566371681416,
+      "Recall": 0.8909090909090909,
+      "F1-Score": 0.8789237668161435,
+      "Macro F1": 0.5745970185432069,
+      "ROC-AUC": 0.6227272727272728,
+      "CV F1 (Mean)": 0.9203758836435822,
+      "CV F1 (Std)": 0.012341624287435916,
+      "CV Acc (Mean)": 0.8612770724421208,
+      "CV Acc (Std)": 0.02154620484083508
+    },
+    {
+      "Model": "Decision Tree",
+      "Accuracy": 0.7615384615384615,
+      "Precision": 0.8558558558558559,
+      "Recall": 0.8636363636363636,
+      "F1-Score": 0.8597285067873304,
+      "Macro F1": 0.5324283559577677,
+      "ROC-AUC": 0.6629545454545455,
+      "CV F1 (Mean)": 0.919476111758399,
+      "CV F1 (Std)": 0.0067200249656789186,
+      "CV Acc (Mean)": 0.8631628080657207,
+      "CV Acc (Std)": 0.013168884555504487
+    },
+    {
+      "Model": "K-Nearest Neighbors",
+      "Accuracy": 0.8153846153846154,
+      "Precision": 0.8524590163934426,
+      "Recall": 0.9454545454545454,
+      "F1-Score": 0.896551724137931,
+      "Macro F1": 0.5197044334975369,
+      "ROC-AUC": 0.5845454545454545,
+      "CV F1 (Mean)": 0.9172630760400009,
+      "CV F1 (Std)": 0.014389552541252253,
+      "CV Acc (Mean)": 0.8516243465272592,
+      "CV Acc (Std)": 0.025586938514495117
+    },
+    {
+      "Model": "Gradient Boosting",
+      "Accuracy": 0.7923076923076923,
+      "Precision": 0.8672566371681416,
+      "Recall": 0.8909090909090909,
+      "F1-Score": 0.8789237668161435,
+      "Macro F1": 0.5745970185432069,
+      "ROC-AUC": 0.6481818181818183,
+      "CV F1 (Mean)": 0.9172423351248209,
+      "CV F1 (Std)": 0.009322755937193939,
+      "CV Acc (Mean)": 0.85739357729649,
+      "CV Acc (Std)": 0.016760649653752135
+    },
+    {
+      "Model": "Random Forest",
+      "Accuracy": 0.8076923076923077,
+      "Precision": 0.8512396694214877,
+      "Recall": 0.9363636363636364,
+      "F1-Score": 0.8917748917748918,
+      "Macro F1": 0.5148529631288252,
+      "ROC-AUC": 0.6845454545454546,
+      "CV F1 (Mean)": 0.9159777054289933,
+      "CV F1 (Std)": 0.009835195011783157,
+      "CV Acc (Mean)": 0.8477968633308439,
+      "CV Acc (Std)": 0.016421746600791567
+    }
+  ],
+  "leakage_experiment": [
+    {
+      "Model": "Logistic Regression",
+      "F1 (Without G1/G2)": 0.8789237668161435,
+      "F1 (With G1/G2 Leakage)": 0.9454545454545454,
+      "F1 Delta (%)": 6.65,
+      "Acc (Without G1/G2)": 0.7923076923076923,
+      "Acc (With G1/G2 Leakage)": 0.9076923076923077
+    },
+    {
+      "Model": "K-Nearest Neighbors",
+      "F1 (Without G1/G2)": 0.896551724137931,
+      "F1 (With G1/G2 Leakage)": 0.9217391304347826,
+      "F1 Delta (%)": 2.52,
+      "Acc (Without G1/G2)": 0.8153846153846154,
+      "Acc (With G1/G2 Leakage)": 0.8615384615384616
+    },
+    {
+      "Model": "Decision Tree",
+      "F1 (Without G1/G2)": 0.8597285067873304,
+      "F1 (With G1/G2 Leakage)": 0.9406392694063926,
+      "F1 Delta (%)": 8.09,
+      "Acc (Without G1/G2)": 0.7615384615384615,
+      "Acc (With G1/G2 Leakage)": 0.9
+    },
+    {
+      "Model": "Random Forest",
+      "F1 (Without G1/G2)": 0.8917748917748918,
+      "F1 (With G1/G2 Leakage)": 0.9369369369369369,
+      "F1 Delta (%)": 4.52,
+      "Acc (Without G1/G2)": 0.8076923076923077,
+      "Acc (With G1/G2 Leakage)": 0.8923076923076924
+    },
+    {
+      "Model": "Support Vector Machine",
+      "F1 (Without G1/G2)": 0.9051724137931034,
+      "F1 (With G1/G2 Leakage)": 0.9298245614035088,
+      "F1 Delta (%)": 2.47,
+      "Acc (Without G1/G2)": 0.8307692307692308,
+      "Acc (With G1/G2 Leakage)": 0.8769230769230769
+    },
+    {
+      "Model": "Gradient Boosting",
+      "F1 (Without G1/G2)": 0.8789237668161435,
+      "F1 (With G1/G2 Leakage)": 0.9454545454545454,
+      "F1 Delta (%)": 6.65,
+      "Acc (Without G1/G2)": 0.7923076923076923,
+      "Acc (With G1/G2 Leakage)": 0.9076923076923077
+    }
+  ]
+}
