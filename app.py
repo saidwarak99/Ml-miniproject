@@ -270,6 +270,25 @@ with st.sidebar:
         """
     )
     st.markdown("---")
+    st.markdown("### 📥 Dataset Links")
+    st.markdown(
+        """
+        - 🌐 [UCI Dataset Repository Page](https://archive.ics.uci.edu/dataset/320/student%2Bperformance)
+        - 📦 [Direct ZIP Download Link](https://archive.ics.uci.edu/static/public/320/student+performance.zip)
+        """
+    )
+    try:
+        csv_bytes = raw_df.to_csv(sep=";", index=False).encode("utf-8")
+        st.download_button(
+            label="📄 Download student-por.csv",
+            data=csv_bytes,
+            file_name="student-por.csv",
+            mime="text/csv",
+            help="Download the exact Portuguese subject dataset used in this project."
+        )
+    except Exception:
+        pass
+    st.markdown("---")
     st.caption("UCI Student Performance | Portuguese Subject (`student-por.csv`)")
 
 
@@ -353,6 +372,39 @@ if selected_page == "Overview":
                 <div class="metric-sub">{p_fail}% of the class (Minority)</div>
             </div>
             """, unsafe_allow_html=True
+        )
+
+    # Dataset Direct Access Links
+    st.markdown("### 📥 Dataset Access & Direct Download Links")
+    st.markdown(
+        """
+        <div style="background: #1E293B; border: 1px solid #334155; border-radius: 8px; padding: 14px 18px; margin-bottom: 18px;">
+            <span style="color: #94A3B8; font-size: 0.9rem;">
+                Official Dataset from the <strong>UCI Machine Learning Repository</strong> (Portuguese Language subject, <code>student-por.csv</code>):
+            </span>
+        </div>
+        """, unsafe_allow_html=True
+    )
+    ds_col1, ds_col2, ds_col3 = st.columns([1, 1, 1])
+    with ds_col1:
+        st.link_button(
+            "🌐 Open UCI Dataset Page",
+            "https://archive.ics.uci.edu/dataset/320/student%2Bperformance",
+            help="Visit official UCI Repository entry for Student Performance (Dataset #320)"
+        )
+    with ds_col2:
+        st.link_button(
+            "📦 Direct ZIP Download Link",
+            "https://archive.ics.uci.edu/static/public/320/student+performance.zip",
+            help="Directly download official student+performance.zip from UCI archive"
+        )
+    with ds_col3:
+        st.download_button(
+            label="📄 Download student-por.csv",
+            data=raw_df.to_csv(sep=";", index=False).encode("utf-8"),
+            file_name="student-por.csv",
+            mime="text/csv",
+            help="Download the local semicolon-separated CSV file used in this app"
         )
 
     st.markdown("### The Core Research Question")
@@ -988,6 +1040,8 @@ elif selected_page == "Methodology & Limitations":
     st.markdown(
         """
         - **Source:** The official **UCI Machine Learning Repository** (Dataset #320).
+        - **Repository Webpage:** [https://archive.ics.uci.edu/dataset/320/student%2Bperformance](https://archive.ics.uci.edu/dataset/320/student%2Bperformance)
+        - **Direct ZIP Download Link:** [https://archive.ics.uci.edu/static/public/320/student+performance.zip](https://archive.ics.uci.edu/static/public/320/student+performance.zip)
         - **Students:** 649 high school students from the Alentejo region of Portugal.
         - **Schools:** Gabriel Pereira and Mousinho da Silveira.
         - **Subject:** Portuguese Language class (`student-por.csv`).
