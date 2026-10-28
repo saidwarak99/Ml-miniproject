@@ -1,6 +1,7 @@
 """
 ClassiScope: Performance Analysis of Classification Algorithms on the Student Performance Dataset
 Streamlit Interactive Dashboard Application.
+Equipped with both rigorous academic metrics and beginner-friendly, student-accessible explanations.
 """
 
 import sys
@@ -41,7 +42,6 @@ st.set_page_config(
 # ---------------------------------------------------------
 CUSTOM_CSS = """
 <style>
-/* Base typography and background overrides */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 html, body, [class*="css"] {
@@ -52,7 +52,7 @@ code, pre {
     font-family: 'JetBrains Mono', monospace !important;
 }
 
-/* Header and card styling */
+/* Header and badge styling */
 .header-badge {
     display: inline-block;
     padding: 4px 12px;
@@ -60,6 +60,20 @@ code, pre {
     background: rgba(56, 189, 248, 0.12);
     border: 1px solid rgba(56, 189, 248, 0.3);
     color: #38BDF8;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.school-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    background: rgba(52, 211, 153, 0.12);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    color: #34D399;
     font-size: 0.8rem;
     font-weight: 600;
     letter-spacing: 0.05em;
@@ -107,32 +121,50 @@ code, pre {
 .editorial-note {
     background: #111827;
     border-left: 3px solid #38BDF8;
-    padding: 14px 18px;
+    padding: 16px 20px;
     border-radius: 0 8px 8px 0;
     margin: 16px 0;
     color: #CBD5E1;
-    font-size: 0.92rem;
-    line-height: 1.6;
+    font-size: 0.94rem;
+    line-height: 1.65;
+}
+
+.student-explainer-box {
+    background: #132238;
+    border: 1px solid #1E3A8A;
+    border-left: 4px solid #38BDF8;
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+    color: #E2E8F0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+.student-explainer-box h4 {
+    color: #38BDF8;
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.05rem;
 }
 
 .warning-callout {
     background: rgba(239, 68, 68, 0.08);
     border: 1px solid rgba(239, 68, 68, 0.35);
     border-left: 4px solid #EF4444;
-    padding: 14px 18px;
+    padding: 16px 20px;
     border-radius: 0 8px 8px 0;
     color: #FCA5A5;
-    font-size: 0.9rem;
+    font-size: 0.92rem;
+    line-height: 1.6;
     margin: 16px 0;
 }
 
-/* Sidebar refined styling */
 [data-testid="stSidebar"] {
     background-color: #0B132B;
     border-right: 1px solid #1E293B;
 }
 
-/* Dataframe polish */
 [data-testid="stDataFrame"] {
     border: 1px solid #334155;
     border-radius: 8px;
@@ -226,18 +258,19 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.markdown("### Experiment Parameters")
+    st.markdown("### 🎓 Quick Concept Guide")
     st.markdown(
         """
-        - **Target:** $G3 \\ge 10$ (Binary)
-        - **Data Split:** Stratified 80/20
-        - **Cross-Validation:** 5-Fold Stratified
-        - **Seed:** Fixed (`42`)
-        - **Leakage Control:** $G1, G2$ Excluded
+        - **What is Machine Learning?**  
+          Teaching a computer patterns by showing it past examples.
+        - **What are we predicting?**  
+          Will a student pass ($G3 \\ge 10$) or need tutoring ($G3 < 10$)?
+        - **Why hide early grades?**  
+          To see if habits can warn teachers *before* any test is written!
         """
     )
     st.markdown("---")
-    st.caption("UCI Student Performance | Portuguese (`student-por.csv`)")
+    st.caption("UCI Student Performance | Portuguese Subject (`student-por.csv`)")
 
 
 # ---------------------------------------------------------
@@ -254,11 +287,25 @@ except Exception as e:
 # Page 1: Overview
 # =========================================================
 if selected_page == "Overview":
-    st.markdown('<div class="header-badge">Project Introduction & Foundation</div>', unsafe_allow_html=True)
+    st.markdown('<div class="header-badge">Project Introduction & Student Guide</div>', unsafe_allow_html=True)
     st.title("Performance Analysis of Classification Algorithms")
     st.markdown(
-        "An empirical benchmarking platform comparing six supervised classification paradigms "
-        "on the UCI Student Performance dataset under rigorous leakage-free validation."
+        "An interactive study that tests **6 different computer algorithms** to see how accurately they can predict "
+        "whether a student passes or fails school, using only their study habits and lifestyle."
+    )
+
+    # Student Friendly Callout Card
+    st.markdown(
+        """
+        <div class="student-explainer-box">
+            <h4>💡 Explain Like I'm in School: What is this project all about?</h4>
+            Imagine you are a teacher on the first day of high school. You want to know which of your students might 
+            struggle later in the year so you can offer them extra tutoring right away—<strong>before they fail any big exam!</strong><br><br>
+            Instead of guessing yourself, you give past student survey information (like study hours, school absences, and free time) 
+            to <strong>6 different mathematical algorithms</strong> (computer brains). This app tests which algorithm makes the best, 
+            fairest guesses, and shows where they make mistakes.
+        </div>
+        """, unsafe_allow_html=True
     )
 
     # Key statistics cards
@@ -267,9 +314,9 @@ if selected_page == "Overview":
         st.markdown(
             f"""
             <div class="metric-card">
-                <div class="metric-title">Total Records</div>
+                <div class="metric-title">Total Students Studied</div>
                 <div class="metric-value">{len(raw_df)}</div>
-                <div class="metric-sub">Portuguese Subject</div>
+                <div class="metric-sub">Real records from Portugal</div>
             </div>
             """, unsafe_allow_html=True
         )
@@ -277,9 +324,9 @@ if selected_page == "Overview":
         st.markdown(
             f"""
             <div class="metric-card">
-                <div class="metric-title">Features Evaluated</div>
+                <div class="metric-title">Habits & Factors Tracked</div>
                 <div class="metric-value">{len(num_cols) + len(cat_cols)}</div>
-                <div class="metric-sub">{len(num_cols)} Numeric • {len(cat_cols)} Categorical</div>
+                <div class="metric-sub">{len(num_cols)} numbers • {len(cat_cols)} categories</div>
             </div>
             """, unsafe_allow_html=True
         )
@@ -289,9 +336,9 @@ if selected_page == "Overview":
         st.markdown(
             f"""
             <div class="metric-card">
-                <div class="metric-title">Higher Grade (≥ 10)</div>
-                <div class="metric-value">{n_pass}</div>
-                <div class="metric-sub">{p_pass}% Class 1 (Majority)</div>
+                <div class="metric-title">Passed (Grade ≥ 10)</div>
+                <div class="metric-value" style="color: #34D399;">{n_pass}</div>
+                <div class="metric-sub">{p_pass}% of the class (Majority)</div>
             </div>
             """, unsafe_allow_html=True
         )
@@ -301,21 +348,19 @@ if selected_page == "Overview":
         st.markdown(
             f"""
             <div class="metric-card">
-                <div class="metric-title">Lower Grade (&lt; 10)</div>
-                <div class="metric-value">{n_fail}</div>
-                <div class="metric-sub">{p_fail}% Class 0 (Imbalanced)</div>
+                <div class="metric-title">Needed Help (Grade &lt; 10)</div>
+                <div class="metric-value" style="color: #F87171;">{n_fail}</div>
+                <div class="metric-sub">{p_fail}% of the class (Minority)</div>
             </div>
             """, unsafe_allow_html=True
         )
 
-    st.markdown("### Research Question & Hypothesis")
+    st.markdown("### The Core Research Question")
     st.markdown(
         """
         <div class="editorial-note">
-            <strong>Core Research Question:</strong> How do diverse classification algorithms 
-            (linear boundaries, distance neighborhoods, recursive partitioning, bootstrap ensembles, 
-            support vector kernels, and sequential boosting) compare in predicting whether a student achieves a passing final grade, 
-            and how do their reliability and error patterns differ when prior-period evaluations are deliberately withheld?
+            <strong>The Scientific Question:</strong> Which classification algorithm performs best at spotting students who will pass 
+            versus fail, and how do their reliability and errors differ when we <strong>strictly hide previous test scores</strong>?
         </div>
         """, unsafe_allow_html=True
     )
@@ -323,67 +368,73 @@ if selected_page == "Overview":
     col_left, col_right = st.columns([1, 1])
 
     with col_left:
-        st.markdown("#### Target Definition & Discretization")
+        st.markdown("#### 🎯 How Passing is Defined (The Target)")
         st.markdown(
             """
-            The raw dataset records $G3$ as a continuous final score ranging from $0$ to $20$ points. 
-            In the Portuguese educational system, a minimum grade of **10/20** is required for promotion:
-            - **Class 1 (Higher Grade / Pass):** $G3 \\ge 10$
-            - **Class 0 (Lower Grade / Fail):** $G3 < 10$
+            In Portuguese secondary schools, student grades are marked from **0 (lowest) to 20 (highest)**.
+            - A student who gets **10 or higher** passes the subject.
+            - A student who gets **less than 10** fails and must retake it.
 
-            **Academic Limitations of this Threshold:**
-            1. **Information Loss:** Discretizing continuous performance into a hard threshold discards 
-               distinctions between high-achieving ($18/20$) and marginally passing ($10/20$) students.
-            2. **Boundary Sensitivity:** A student scoring $9.4$ is placed in Class 0, while $10.0$ is Class 1, 
-               introducing classification volatility around borderline scores.
-            3. **Severe Class Imbalance:** **84.6%** of students pass, which implies a naive classifier 
-               predicting 'Pass' for everyone achieves $84.6\\%$ accuracy while having **zero sensitivity** to at-risk students.
+            **In our computer models:**
+            - **Class 1 (Pass):** Final Grade ($G3$) $\\ge 10$
+            - **Class 0 (Fail / Needs Help):** Final Grade ($G3$) $< 10$
+
+            **Why this is tricky for the computer:**
+            - **84.6%** of students passed, and only **15.4%** failed!
+            - If a lazy computer simply guessed *"Everyone passes!"* for every single student, 
+              it would get **84.6% accuracy**, but it would catch **0** failing students! 
+              That is why we cannot rely on accuracy alone—we must check **F1-Score** and **Recall**.
             """
         )
 
     with col_right:
-        st.markdown("#### Primary Experiment Leakage Control")
+        st.markdown("#### 🚫 The 'No Cheating' Rule (Data Leakage)")
         st.markdown(
             """
-            In many historical machine learning exercises, models include $G1$ (first period grade) 
-            and $G2$ (second period grade). In this benchmark:
-            - **$G1$ and $G2$ are strictly removed** from the feature matrix.
-            - **Rationale:** Using prior-period grades turns the problem into a trivial autoregressive prediction ($r > 0.8$), 
-              causing massive data leakage and making the model useless for semester-start academic support.
-            - **$G3$ is naturally removed**, as it is the target source.
+            In the real school year, students take three big exams:
+            - **$G1$:** Exam in the 1st trimester (autumn)
+            - **$G2$:** Exam in the 2nd trimester (winter)
+            - **$G3$:** Final grade (summer)
+
+            **Why did we throw away $G1$ and $G2$?**
+            - If a computer already knows a student scored an $18/20$ on the winter exam, 
+              guessing they will pass in summer is **too easy!** That's called *data leakage* (cheating).
+            - Real early-intervention happens in **September**, before any exams exist. 
+              So our computer has to rely solely on **habits, attendance, and background**.
             """
         )
 
     st.markdown("---")
-    st.markdown("### Raw Target Distribution and Class Disparity")
+    st.markdown("### 📊 What the Real Student Grades Look Like")
+    st.markdown("Below is a histogram showing all 649 final grades. Notice how the dashed yellow line at **10** cuts the class into Passes and Fails:")
 
     fig_hist = go.Figure()
     fig_hist.add_trace(go.Histogram(
         x=raw_df[raw_df["G3"] < 10]["G3"],
-        name="Lower Grade (< 10)",
+        name="Failed (< 10)",
         marker_color="#F87171",
         nbinsx=10,
         opacity=0.85
     ))
     fig_hist.add_trace(go.Histogram(
         x=raw_df[raw_df["G3"] >= 10]["G3"],
-        name="Higher Grade (≥ 10)",
+        name="Passed (≥ 10)",
         marker_color="#38BDF8",
         nbinsx=15,
         opacity=0.85
     ))
-    fig_hist.add_vline(x=9.5, line_dash="dash", line_color="#FBBF24", annotation_text="Threshold (10)", annotation_position="top left")
+    fig_hist.add_vline(x=9.5, line_dash="dash", line_color="#FBBF24", annotation_text="Passing Cutoff (10/20)", annotation_position="top left")
     fig_hist.update_layout(
-        title="Continuous G3 Distribution with Binary Cutoff",
+        title="Student Final Grade ($G3$) Distribution",
         barmode="overlay",
-        xaxis_title="Final Grade (G3: 0 - 20 Scale)",
-        yaxis_title="Student Count",
+        xaxis_title="Final Grade (0 to 20 Scale)",
+        yaxis_title="Number of Students",
         **PLOTLY_THEME["layout"]
     )
     st.plotly_chart(fig_hist, use_container_width=True)
 
-    # Dataset preview
-    with st.expander("Explore Raw Dataset Sample (First 10 Rows)", expanded=False):
+    with st.expander("🔍 Click to see what the raw student data table looks like", expanded=False):
+        st.write("Here are the first 10 rows of real student records. Notice columns like `studytime`, `failures`, `absences`, and `internet`:")
         st.dataframe(raw_df.head(10), use_container_width=True)
 
 
@@ -391,14 +442,29 @@ if selected_page == "Overview":
 # Page 2: Model Benchmark
 # =========================================================
 elif selected_page == "Model Benchmark":
-    st.markdown('<div class="header-badge">Comparative Performance Benchmark</div>', unsafe_allow_html=True)
-    st.title("Algorithm Comparison Across Evaluation Metrics")
+    st.markdown('<div class="header-badge">The Algorithm Face-Off</div>', unsafe_allow_html=True)
+    st.title("Comparing the 6 Machine Learning Algorithms")
     st.markdown(
-        "All six models were trained on identical stratified partitions ($N_{train} = 519$, $N_{test} = 130$) "
-        "with isolated preprocessing and 5-fold cross-validation."
+        "We trained all 6 algorithms on the exact same group of 519 students, "
+        "and then tested them on 130 secret test students they had never seen before."
     )
 
-    # Controls
+    # Student Friendly Explainer
+    with st.expander("🤖 Meet the 6 'Math Robots' (How each algorithm makes its guesses)", expanded=True):
+        st.markdown(
+            """
+            | Algorithm | How it thinks (Simple School Analogy) |
+            | :--- | :--- |
+            | **1. Logistic Regression** | **The Scorecard:** Assigns plus points or minus points for every habit (e.g., $+2$ for study time, $-3$ for absences). If total score > threshold, it predicts 'Pass'. |
+            | **2. K-Nearest Neighbors (KNN)** | **The Study Group ("Birds of a Feather"):** When a new student arrives, it finds the **7 most similar students** from past years. Whatever the majority did, it predicts for the new student. |
+            | **3. Decision Tree** | **The Game of 20 Questions:** A step-by-step flowchart: *Did the student fail classes before? $\\rightarrow$ No $\\rightarrow$ Do they study > 5 hours? $\\rightarrow$ Yes $\\rightarrow$ Predict PASS.* |
+            | **4. Random Forest** | **The Classroom Committee:** Instead of 1 flowchart, it builds **150 different flowcharts**, lets them all vote, and takes the majority opinion. |
+            | **5. Support Vector Machine (SVM)** | **The Fence Builder:** Plots all students on a multi-dimensional map and builds the widest possible boundary fence separating passing students from failing students. |
+            | **6. Gradient Boosting** | **The Dedicated Learner:** Builds one flowchart, identifies all the students it got wrong, builds a 2nd flowchart specifically to fix those errors, and repeats 120 times! |
+            """
+        )
+
+    # Ranking Metric Selector
     ctrl_col1, ctrl_col2 = st.columns([1, 2])
     with ctrl_col1:
         metric_options = [
@@ -406,10 +472,10 @@ elif selected_page == "Model Benchmark":
             "Precision", "Recall", "ROC-AUC", "CV Acc (Mean)"
         ]
         selected_metric = st.selectbox(
-            "Primary Ranking Metric",
+            "Sort Leaderboard By:",
             metric_options,
             index=0,
-            help="Select the metric used to sort the leaderboard and plot comparisons."
+            help="Choose which test score determines the winner!"
         )
 
     sorted_df = summary_df.sort_values(by=selected_metric, ascending=False).reset_index(drop=True)
@@ -420,16 +486,29 @@ elif selected_page == "Model Benchmark":
         st.markdown(
             f"""
             <div style="background: #1E293B; border: 1px solid #334155; border-radius: 8px; padding: 12px 18px; margin-top: 24px;">
-                <span style="color: #94A3B8; font-size: 0.85rem;">LEADER FOR {selected_metric.upper()}:</span>
+                <span style="color: #94A3B8; font-size: 0.85rem;">🏆 TOP PERFORMER FOR {selected_metric.upper()}:</span>
                 <strong style="color: #38BDF8; font-size: 1.15rem; margin-left: 8px;">{top_model}</strong>
-                <span style="color: #F8FAFC; margin-left: 6px; font-weight: 700;">({top_score:.4f})</span>
+                <span style="color: #F8FAFC; margin-left: 6px; font-weight: 700;">({top_score:.3f})</span>
             </div>
             """, unsafe_allow_html=True
         )
 
-    st.markdown("### Benchmark Leaderboard")
+    # Easy Metric Glossary
+    with st.expander("📖 What do all these score column names mean? (Student Cheat-Sheet)", expanded=False):
+        st.markdown(
+            """
+            - **Accuracy:** The total percentage of correct guesses out of all students ($0.80 = 80\\%$).
+            - **Precision:** When the model shouts *"This student will PASS!"*, how often was it actually right?
+            - **Recall:** Out of all the students who truly passed, how many did the model manage to find?
+            - **F1-Score:** The balanced score between Precision and Recall. (Like a decathlon score combining speed and strength).
+            - **Macro F1:** An unweighted score giving **equal respect** to both passing and failing students.
+            - **ROC-AUC:** How good the model is at separating high performers from struggling students across all strictness levels. ($0.5$ is pure guessing; $1.0$ is perfect).
+            - **CV F1 (Mean ± Std):** Cross-validation! We split students into 5 different batches to test if the model gets consistent scores or just got lucky on one test.
+            """
+        )
+
+    st.markdown("### 🏆 Official Model Leaderboard")
     
-    # Format display table nicely
     display_df = sorted_df.copy()
     format_dict = {
         "Accuracy": "{:.3f}",
@@ -451,19 +530,10 @@ elif selected_page == "Model Benchmark":
         use_container_width=True
     )
 
-    st.markdown(
-        """
-        <p style="font-size: 0.85rem; color: #94A3B8;">
-            * CV metrics denote 5-fold Stratified Cross-Validation on the training set (mean ± standard deviation). 
-            Holdout test metrics reflect unseen test generalization. Models are strictly not tuned against the test partition.
-        </p>
-        """, unsafe_allow_html=True
-    )
-
     st.markdown("---")
-    st.markdown("### Interactive Metric Comparisons")
+    st.markdown("### 📊 Visual Chart Comparisons")
 
-    tab1, tab2 = st.tabs(["Selected Metric Bar Comparison", "Multi-Metric Radar Profiling"])
+    tab1, tab2 = st.tabs(["Bar Chart: Who Scored Highest?", "Radar Chart: The Full Skills Profile"])
 
     with tab1:
         fig_bar = px.bar(
@@ -473,9 +543,8 @@ elif selected_page == "Model Benchmark":
             color="Model",
             color_discrete_map=MODEL_COLORS,
             text_auto=".3f",
-            title=f"Models Ranked by {selected_metric}"
+            title=f"All 6 Models Ranked by {selected_metric}"
         )
-        # Add error bars if plotting CV metric
         if selected_metric == "CV F1 (Mean)":
             fig_bar.update_traces(error_y=dict(type="data", array=sorted_df["CV F1 (Std)"]))
         elif selected_metric == "CV Acc (Mean)":
@@ -494,7 +563,7 @@ elif selected_page == "Model Benchmark":
         for idx, row in sorted_df.iterrows():
             m_name = row["Model"]
             vals = [row[m] for m in radar_metrics]
-            vals.append(vals[0])  # close polygon
+            vals.append(vals[0])
             fig_radar.add_trace(go.Scatterpolar(
                 r=vals,
                 theta=radar_metrics + [radar_metrics[0]],
@@ -508,7 +577,7 @@ elif selected_page == "Model Benchmark":
                 radialaxis=dict(visible=True, range=[0.4, 1.0], gridcolor="#334155"),
                 angularaxis=dict(gridcolor="#334155")
             ),
-            title="Holistic Multi-Metric Radar Comparison",
+            title="Radar Profile: Showing Strengths Across All 5 Key Metrics",
             **PLOTLY_THEME["layout"]
         )
         st.plotly_chart(fig_radar, use_container_width=True)
@@ -518,28 +587,42 @@ elif selected_page == "Model Benchmark":
 # Page 3: Error Analysis
 # =========================================================
 elif selected_page == "Error Analysis":
-    st.markdown('<div class="header-badge">Diagnostic Inspection</div>', unsafe_allow_html=True)
-    st.title("Error Analysis & Diagnostic Curves")
+    st.markdown('<div class="header-badge">Investigating Mistakes</div>', unsafe_allow_html=True)
+    st.title("Error Analysis: Where Did the Algorithms Get It Wrong?")
     st.markdown(
-        "Examine model prediction distributions, confusion matrix dynamics, "
-        "and false-positive versus false-negative rates on the holdout test set ($N = 130$)."
+        "No machine learning model is perfect. In this section, we inspect the exact mistakes "
+        "the selected model made on the 130 test students."
     )
 
     selected_model_name = st.selectbox(
-        "Select Model to Inspect",
+        "Choose an Algorithm to Inspect:",
         list(results_map.keys()),
         index=0
     )
     res = results_map[selected_model_name]
 
-    # Metrics top cards
+    # Student Friendly Explainer
+    st.markdown(
+        """
+        <div class="student-explainer-box">
+            <h4>💡 In School Terms: The 4 Possible Guesses (The Confusion Matrix)</h4>
+            Every time the computer predicts a student's fate, only 4 things can happen:<br>
+            • <strong>True Positive (TP):</strong> The computer guessed <em>Pass</em>, and the student <strong>Passed</strong>! (Good guess 🎉)<br>
+            • <strong>True Negative (TN):</strong> The computer guessed <em>Needs Help</em>, and the student <strong>Needed Help</strong>! (Tutoring offered in time ✅)<br>
+            • <strong>False Positive (FP - The Worst Mistake):</strong> The computer guessed <em>Pass</em>, but the student actually <strong>Failed</strong>! (Dangerous: the student fell through the cracks and got no tutoring ❌)<br>
+            • <strong>False Negative (FN):</strong> The computer guessed <em>Needs Help</em>, but the student actually <strong>Passed</strong>! (Harmless: student got extra help they didn't strictly need ⚠️)
+        </div>
+        """, unsafe_allow_html=True
+    )
+
+    # 4 Counters
     c1, c2, c3, c4 = st.columns(4)
     with c1:
         st.markdown(
             f"""
             <div class="metric-card">
                 <div class="metric-title">Test Accuracy</div>
-                <div class="metric-value">{res['test_accuracy']:.3f}</div>
+                <div class="metric-value">{res['test_accuracy']:.1%}</div>
                 <div class="metric-sub">{int(res['test_accuracy']*len(res['y_test']))} / {len(res['y_test'])} correct</div>
             </div>
             """, unsafe_allow_html=True
@@ -560,7 +643,7 @@ elif selected_page == "Error Analysis":
             <div class="metric-card">
                 <div class="metric-title">False Negatives (FN)</div>
                 <div class="metric-value" style="color: #F87171;">{res['fn']}</div>
-                <div class="metric-sub">Passed, but Predicted Fail</div>
+                <div class="metric-sub">Passed, but predicted to fail</div>
             </div>
             """, unsafe_allow_html=True
         )
@@ -570,32 +653,19 @@ elif selected_page == "Error Analysis":
             <div class="metric-card">
                 <div class="metric-title">False Positives (FP)</div>
                 <div class="metric-value" style="color: #FBBF24;">{res['fp']}</div>
-                <div class="metric-sub">Failed, but Predicted Pass</div>
+                <div class="metric-sub">Failed, but predicted to pass!</div>
             </div>
             """, unsafe_allow_html=True
         )
 
-    st.markdown(
-        """
-        <div class="editorial-note">
-            <strong>Practical Real-World Interpretation of Errors:</strong><br>
-            • <strong>False Positives (FP):</strong> An at-risk student (actual score < 10) is predicted to pass. 
-            In academic intervention systems, this error is the most critical because the student is denied early tutoring.<br>
-            • <strong>False Negatives (FN):</strong> A passing student (actual score ≥ 10) is flagged as at-risk. 
-            While less harmful pedagogically, high false negatives misallocate limited academic counseling resources.
-        </div>
-        """, unsafe_allow_html=True
-    )
-
     col_cm, col_curves = st.columns([1, 1])
 
     with col_cm:
-        st.markdown("#### Confusion Matrix")
+        st.markdown("#### The Confusion Matrix Grid")
         cm = res["confusion_matrix"]
-        cm_labels = ["Actual Lower (<10)", "Actual Higher (≥10)"]
-        pred_labels = ["Pred Lower (<10)", "Pred Higher (≥10)"]
+        cm_labels = ["Actual Fail (<10)", "Actual Pass (≥10)"]
+        pred_labels = ["Pred Fail (<10)", "Pred Pass (≥10)"]
         
-        # Interactive heatmap
         fig_cm = go.Figure(data=go.Heatmap(
             z=cm,
             x=pred_labels,
@@ -603,20 +673,20 @@ elif selected_page == "Error Analysis":
             colorscale=[[0, "#1E293B"], [0.5, "#0284C7"], [1.0, "#38BDF8"]],
             text=[[f"TN: {cm[0,0]}", f"FP: {cm[0,1]}"], [f"FN: {cm[1,0]}", f"TP: {cm[1,1]}"]],
             texttemplate="%{text}",
-            textfont={"size": 16, "color": "#F8FAFC"},
+            textfont={"size": 18, "color": "#F8FAFC"},
             showscale=False
         ))
         fig_cm.update_layout(
             title=f"Confusion Matrix: {selected_model_name}",
-            xaxis_title="Predicted Class",
-            yaxis_title="True Class",
+            xaxis_title="What the Computer Predicted",
+            yaxis_title="What Actually Happened to the Student",
             **PLOTLY_THEME["layout"]
         )
         st.plotly_chart(fig_cm, use_container_width=True)
 
     with col_curves:
-        st.markdown("#### ROC & Precision-Recall Curves")
-        sub_tab1, sub_tab2 = st.tabs(["ROC Curve", "Precision-Recall Curve"])
+        st.markdown("#### Diagnostic Curves")
+        sub_tab1, sub_tab2 = st.tabs(["ROC Curve (Separation Power)", "Precision-Recall Curve"])
         
         with sub_tab1:
             fig_roc = go.Figure()
@@ -625,22 +695,23 @@ elif selected_page == "Error Analysis":
                 y=res["tpr"],
                 mode="lines",
                 line=dict(color="#38BDF8", width=3),
-                name=f"ROC (AUC = {res['test_roc_auc']:.3f})"
+                name=f"Model ROC (AUC = {res['test_roc_auc']:.3f})"
             ))
             fig_roc.add_trace(go.Scatter(
                 x=[0, 1],
                 y=[0, 1],
                 mode="lines",
                 line=dict(color="#64748B", dash="dash"),
-                name="Chance Baseline"
+                name="Pure Coin Toss Line"
             ))
             fig_roc.update_layout(
                 title=f"ROC Curve: {selected_model_name}",
-                xaxis_title="False Positive Rate",
-                yaxis_title="True Positive Rate",
+                xaxis_title="False Alarm Rate (False Positive Rate)",
+                yaxis_title="True Success Rate (True Positive Rate)",
                 **PLOTLY_THEME["layout"]
             )
             st.plotly_chart(fig_roc, use_container_width=True)
+            st.caption("💡 The closer the blue curve arches toward the top-left corner, the better the model is!")
             
         with sub_tab2:
             fig_pr = go.Figure()
@@ -651,13 +722,12 @@ elif selected_page == "Error Analysis":
                 line=dict(color="#34D399", width=3),
                 name="Precision-Recall"
             ))
-            # Baseline PR is positive class prevalence
             baseline_pr = float(np.mean(res["y_test"]))
-            fig_pr.add_hline(y=baseline_pr, line_dash="dash", line_color="#64748B", annotation_text=f"Prevalence ({baseline_pr:.2f})")
+            fig_pr.add_hline(y=baseline_pr, line_dash="dash", line_color="#64748B", annotation_text=f"Class Prevalence ({baseline_pr:.2f})")
             fig_pr.update_layout(
                 title=f"Precision-Recall Curve: {selected_model_name}",
-                xaxis_title="Recall",
-                yaxis_title="Precision",
+                xaxis_title="Recall (Coverage of Passing Students)",
+                yaxis_title="Precision (Accuracy of 'Pass' Calls)",
                 **PLOTLY_THEME["layout"]
             )
             st.plotly_chart(fig_pr, use_container_width=True)
@@ -667,33 +737,36 @@ elif selected_page == "Error Analysis":
 # Page 4: Experiment Lab
 # =========================================================
 elif selected_page == "Experiment Lab":
-    st.markdown('<div class="header-badge">Controlled Empirical Experiments</div>', unsafe_allow_html=True)
-    st.title("Experiment Lab & Diagnostic Stress-Tests")
+    st.markdown('<div class="header-badge">The Science Laboratory</div>', unsafe_allow_html=True)
+    st.title("Experiment Lab & Stress Tests")
     st.markdown(
-        "Execute controlled variations to analyze sample efficiency, empirical data leakage, "
-        "and fold-to-fold cross-validation stability."
+        "In science, you change one variable at a time to see what happens. "
+        "Here are 3 controlled experiments showing how the models behave under stress."
     )
 
     exp_choice = st.radio(
-        "Select Experiment",
+        "Select an Experiment to Run:",
         [
-            "1. Training Data Proportion (Learning Curve)",
-            "2. Data Leakage Ablation (With vs Without G1/G2)",
-            "3. Cross-Validation Stability Analysis"
-        ],
-        horizontal=True
+            "1. Data Diet: Does giving the computer more students make it smarter?",
+            "2. The Cheat Test: What happens if we give the computer early exam marks (G1 & G2)?",
+            "3. Consistency Check: Does the computer get lucky on certain groups of students?"
+        ]
     )
 
-    if "1. Training Data" in exp_choice:
-        st.markdown("### Sample Efficiency: Performance Across Training Set Proportions")
+    if "1. Data Diet" in exp_choice:
+        st.markdown("### 🧪 Experiment 1: The 'Data Diet' (Learning Curves)")
         st.markdown(
             """
-            This experiment trains all six algorithms on incremental subsets of the training data 
-            (from 30% up to 100% of training data) while keeping the holdout test set fixed. 
-            It evaluates which algorithms reach asymptotic performance fastest.
-            """
+            <div class="student-explainer-box">
+                <h4>💡 Simple Explanation: How much homework does a computer need?</h4>
+                If a human student only studies 3 practice math problems, they won't do very well on the exam. 
+                If they study 50 problems, their score improves!<br>
+                Here, we train the computers with only <strong>30% of students</strong>, then <strong>45%</strong>, 
+                <strong>60%</strong>, all the way to <strong>100%</strong> to see who learns fastest.
+            </div>
+            """, unsafe_allow_html=True
         )
-        with st.spinner("Computing learning curves..."):
+        with st.spinner("Computing learning curves across training sizes..."):
             lc_df = get_learning_curve_data()
 
         fig_lc = px.line(
@@ -703,31 +776,31 @@ elif selected_page == "Experiment Lab":
             color="Model",
             color_discrete_map=MODEL_COLORS,
             markers=True,
-            title="Test F1-Score Progression Across Training Sample Sizes"
+            title="Test Score Improvement as More Student Records are Provided"
         )
         fig_lc.update_layout(
-            xaxis_title="Number of Training Instances",
-            yaxis_title="Test F1-Score",
+            xaxis_title="Number of Training Students Given to the Model",
+            yaxis_title="Test F1-Score on Unseen Students",
             **PLOTLY_THEME["layout"]
         )
         st.plotly_chart(fig_lc, use_container_width=True)
 
-        with st.expander("View Training Proportion Data Table"):
+        with st.expander("🔍 Click to view the exact data table"):
             st.dataframe(lc_df, use_container_width=True)
 
-    elif "2. Data Leakage" in exp_choice:
-        st.markdown("### Data Leakage Ablation Study")
+    elif "2. The Cheat Test" in exp_choice:
+        st.markdown("### 🧪 Experiment 2: The Data Leakage 'Open Book' Test")
         st.markdown(
             """
             <div class="warning-callout">
-                <strong>Crucial Methodological Demonstration:</strong> 
-                Many student success models report artificially inflated F1 and accuracy metrics (95%+) 
-                because they naively include intermediate trimester marks ($G1, G2$). 
-                Below is the empirical proof of this leakage effect.
+                <h4 style="margin-top:0; color:#EF4444;">🚨 The Proof of Why You Cannot Cheat With Prior Grades</h4>
+                In school, if you give a student the answers to Quiz 1 and Quiz 2 while they take Quiz 3, their score jumps! 
+                That is exactly what happens when ML models include $G1$ and $G2$. 
+                Below is the real experiment proving that scores artificially shoot up when you cheat:
             </div>
             """, unsafe_allow_html=True
         )
-        with st.spinner("Executing leakage comparison..."):
+        with st.spinner("Running leakage comparison..."):
             leak_df = get_leakage_data()
 
         st.dataframe(
@@ -735,8 +808,8 @@ elif selected_page == "Experiment Lab":
                 "F1 (Without G1/G2)": "{:.3f}",
                 "F1 (With G1/G2 Leakage)": "{:.3f}",
                 "F1 Delta (%)": "+{:.2f}%",
-                "Acc (Without G1/G2)": "{:.3f}",
-                "Acc (With G1/G2 Leakage)": "{:.3f}",
+                "Acc (Without G1/G2)": "{:.1%}",
+                "Acc (With G1/G2 Leakage)": "{:.1%}",
             }).highlight_max(subset=["F1 Delta (%)"], color="#7F1D1D"),
             use_container_width=True
         )
@@ -745,29 +818,39 @@ elif selected_page == "Experiment Lab":
         fig_leak.add_trace(go.Bar(
             x=leak_df["Model"],
             y=leak_df["F1 (Without G1/G2)"],
-            name="Realistic Benchmark (No Prior Grades)",
+            name="Honest Benchmark (Habits Only, No Prior Grades)",
             marker_color="#38BDF8"
         ))
         fig_leak.add_trace(go.Bar(
             x=leak_df["Model"],
             y=leak_df["F1 (With G1/G2 Leakage)"],
-            name="Leaked Pipeline (Includes G1 & G2)",
+            name="Cheating Benchmark (Includes Prior Trimester Marks)",
             marker_color="#EF4444"
         ))
         fig_leak.update_layout(
             barmode="group",
-            title="Impact of G1 and G2 Leakage on F1-Score Across Models",
+            title="Comparison: Honest Early Warning vs Leaked Prior Grades",
             yaxis_title="F1-Score",
             yaxis_range=[0.7, 1.0],
             **PLOTLY_THEME["layout"]
         )
         st.plotly_chart(fig_leak, use_container_width=True)
-
-    elif "3. Cross-Validation" in exp_choice:
-        st.markdown("### Fold-to-Fold Cross-Validation Stability")
         st.markdown(
-            "Examines the variance and dispersion across all 5 stratified cross-validation folds on the training set. "
-            "Lower variance indicates higher algorithmic stability when exposed to varying student cohorts."
+            "Notice how **Decision Tree jumps from 76% accuracy to 90% accuracy**! "
+            "That sounds impressive, but it's useless if you want to help students on Day 1 of school."
+        )
+
+    elif "3. Consistency Check" in exp_choice:
+        st.markdown("### 🧪 Experiment 3: Cross-Validation Consistency")
+        st.markdown(
+            """
+            <div class="student-explainer-box">
+                <h4>💡 Simple Explanation: Testing across 5 different student cohorts</h4>
+                If a student takes 1 test and gets an A, did they get lucky, or are they genuinely good? 
+                To find out, we give them 5 tests! In machine learning, this is called <strong>5-Fold Cross-Validation</strong>. 
+                The tighter and smaller the boxplot, the more consistent and trustworthy the algorithm is.
+            </div>
+            """, unsafe_allow_html=True
         )
 
         cv_records = []
@@ -775,7 +858,7 @@ elif selected_page == "Experiment Lab":
             for fold_i, score in enumerate(r["cv_f1_scores"]):
                 cv_records.append({
                     "Model": name,
-                    "Fold": f"Fold {fold_i+1}",
+                    "Fold": f"Cohort {fold_i+1}",
                     "F1-Score": score
                 })
         cv_plot_df = pd.DataFrame(cv_records)
@@ -787,7 +870,7 @@ elif selected_page == "Experiment Lab":
             color="Model",
             color_discrete_map=MODEL_COLORS,
             points="all",
-            title="5-Fold Stratified CV F1-Score Dispersion"
+            title="5-Fold Cross-Validation Score Spread (Consistency Test)"
         )
         fig_box.update_layout(
             showlegend=False,
@@ -801,19 +884,19 @@ elif selected_page == "Experiment Lab":
 # Page 5: Explainability
 # =========================================================
 elif selected_page == "Explainability":
-    st.markdown('<div class="header-badge">Model Interpretability & Feature Attribution</div>', unsafe_allow_html=True)
-    st.title("Feature Attribution & Explainability")
+    st.markdown('<div class="header-badge">Peeking Inside the Black Box</div>', unsafe_allow_html=True)
+    st.title("Explainability: Which Student Habits Mattered Most?")
     st.markdown(
-        "Inspect the empirical feature contributions of each classification paradigm."
+        "A good scientist doesn't just want a prediction—they want to know **why** the computer made that prediction."
     )
 
     st.markdown(
         """
         <div class="warning-callout">
-            <strong>Ethical & Scientific Advisory:</strong> 
-            Feature importances reflect statistical correlations within this sample from two Portuguese schools (2005–2006). 
-            <strong>They must NEVER be interpreted as causal claims</strong> about student background, intelligence, 
-            family structure, or societal stereotypes.
+            <h4 style="margin-top:0; color:#EF4444;">⚠️ The Golden Rule: Correlation is NOT Causation!</h4>
+            Just because the computer noticed that students with higher absences had lower grades 
+            <strong>does NOT mean skipping a day automatically makes someone unintelligent</strong>. 
+            These are statistical trends in one group of students from 2005. They must NEVER be used to stereotype or judge real people!
         </div>
         """, unsafe_allow_html=True
     )
@@ -821,22 +904,22 @@ elif selected_page == "Explainability":
     c_exp1, c_exp2 = st.columns([1, 1])
     with c_exp1:
         model_for_exp = st.selectbox(
-            "Select Model for Feature Attribution",
+            "Select an Algorithm to Inspect:",
             list(results_map.keys()),
-            index=3  # Default Random Forest
+            index=3  # Random Forest default
         )
     with c_exp2:
-        top_n = st.slider("Number of Top Features", min_value=5, max_value=25, value=12)
+        top_n = st.slider("Number of Top Factors to Display:", min_value=5, max_value=25, value=12)
 
     pipe = results_map[model_for_exp]["pipeline"]
-    with st.spinner("Extracting feature attributions..."):
+    with st.spinner("Extracting feature rankings..."):
         feat_df = extract_feature_importance(
             model_for_exp, pipe, X_train, y_train, X_test, y_test, top_n=top_n
         )
 
     if not feat_df.empty:
         metric_used = feat_df.iloc[0]["Metric"]
-        st.markdown(f"**Metric Applied:** `{metric_used}`")
+        st.markdown(f"**Math Method Applied:** `{metric_used}`")
 
         fig_feat = px.bar(
             feat_df.sort_values(by="Importance", ascending=True),
@@ -844,25 +927,35 @@ elif selected_page == "Explainability":
             y="Feature",
             orientation="h",
             color_discrete_sequence=[MODEL_COLORS[model_for_exp]],
-            title=f"Top {top_n} Features: {model_for_exp}"
+            title=f"Top {top_n} Most Influential Features for {model_for_exp}"
         )
         fig_feat.update_layout(
-            xaxis_title="Attribution Score",
-            yaxis_title="Feature Name",
+            xaxis_title="Importance Weight (Higher = Stronger Influence on the Guess)",
+            yaxis_title="Student Habit / Attribute",
             **PLOTLY_THEME["layout"]
         )
         st.plotly_chart(fig_feat, use_container_width=True)
 
-    st.markdown("### Why Feature Importance Metrics are Not Interchangeable")
+    with st.expander("📖 What do these feature names mean in plain English?"):
+        st.markdown(
+            """
+            - **`failures`**: Number of past school classes the student previously failed (1, 2, 3, or 4).
+            - **`absences`**: Number of days the student was absent from school.
+            - **`studytime`**: Weekly study hours (1 = <2 hours, 2 = 2 to 5 hours, 3 = 5 to 10 hours, 4 = >10 hours).
+            - **`Medu` / `Fedu`**: Mother's and Father's education level.
+            - **`Dalc` / `Walc`**: Workday and Weekend alcohol consumption (self-reported scale 1 to 5).
+            - **`higher`**: Whether the student wants to attend university (Yes / No).
+            - **`schoolsup`**: Whether the student receives extra educational support from school.
+            """
+        )
+
+    st.markdown("### Why Different Algorithms Value Different Things")
     st.markdown(
         """
-        Different classification families quantify feature contributions through fundamentally distinct mathematical lenses:
-        
-        | Paradigm | Method | Mathematical Meaning | Limitations |
-        | :--- | :--- | :--- | :--- |
-        | **Tree / Ensembles** | Mean Decrease Impurity (MDI) | Total Gini purity gain aggregated across splits | Heavily biased toward high-cardinality and continuous variables. |
-        | **Logistic Regression** | Standardized $\\beta$ Coefficients | Change in log-odds per standard deviation shift | Assumes strictly linear and monotonic relationships. |
-        | **KNN / SVM** | Permutation Importance | Drop in holdout F1 when feature values are permuted | Dependent on test set size; sensitive to correlated feature collinearity. |
+        Notice that if you switch between **Random Forest** and **Logistic Regression**, the ranking of features changes!
+        - **Trees (Random Forest)** look for clean splits (e.g., *"Did the student have 0 failures?"*).
+        - **Linear Models (Logistic Regression)** look for steady upward or downward ramps.
+        - Neither one is "right" or "wrong"—they are just two different ways of looking at the same classroom.
         """
     )
 
@@ -871,78 +964,60 @@ elif selected_page == "Explainability":
 # Page 6: Methodology & Limitations
 # =========================================================
 elif selected_page == "Methodology & Limitations":
-    st.markdown('<div class="header-badge">Academic Protocol & Governance</div>', unsafe_allow_html=True)
-    st.title("Methodology, Limitations & Ethics")
+    st.markdown('<div class="header-badge">Scientific Integrity & Ethics</div>', unsafe_allow_html=True)
+    st.title("Methodology, Limitations & Algorithmic Ethics")
     st.markdown(
-        "Complete transparency regarding dataset provenance, experimental design, metric definitions, and algorithmic ethics."
+        "Scientific research requires total honesty about where data came from, "
+        "how the experiment was performed, and the serious dangers of misusing AI."
     )
 
     st.markdown(
         """
         <div class="warning-callout">
-            <h4 style="margin-top:0; color:#EF4444;">ETHICAL AND RESPONSIBLE USE MANDATE</h4>
-            This software and all benchmark models are designed <strong>strictly for educational, scientific, 
-            and algorithmic benchmarking purposes</strong>.<br><br>
-            <strong>These models MUST NOT be used to label, rank, sort, deny opportunities to, or make 
-            consequential academic decisions about real students.</strong> Automated decision systems built on demographic 
-            or behavioral markers risk perpetuating systemic biases and penalizing vulnerable individuals.
+            <h3 style="margin-top:0; color:#EF4444;">🛡️ The Ethical Mandate: Protecting Real Students</h3>
+            This software was built solely for <strong>educational and scientific benchmark exploration</strong>.<br><br>
+            <strong>Under no circumstances should any predictive machine learning model be used to rank, grade, 
+            label, or deny opportunities to real students in real schools.</strong><br>
+            When computers judge human beings based on parental education or home neighborhood, they risk 
+            automating discrimination and treating children as statistics rather than individuals with limitless potential.
         </div>
         """, unsafe_allow_html=True
     )
 
-    st.markdown("### 1. Dataset Provenance & Citation")
+    st.markdown("### 1. Where the Dataset Came From (Dataset Provenance)")
     st.markdown(
         """
-        - **Source:** UCI Machine Learning Repository (Dataset ID: 320)
-        - **Subjects:** Secondary school students in the Alentejo region of Portugal (schools: Gabriel Pereira and Mousinho da Silveira).
-        - **Dataset file used:** `student-por.csv` (Portuguese Language subject, $N = 649$, 33 original attributes).
-        - **Original Citation:**  
+        - **Source:** The official **UCI Machine Learning Repository** (Dataset #320).
+        - **Students:** 649 high school students from the Alentejo region of Portugal.
+        - **Schools:** Gabriel Pereira and Mousinho da Silveira.
+        - **Subject:** Portuguese Language class (`student-por.csv`).
+        - **Original Research Paper:**  
           > Cortez, P., & Silva, A. M. G. (2008). *Using Data Mining to Predict Secondary School Student Performance*.  
-          > In Proceedings of the 5th Annual Future Business Technology Conference (FUBUTEC 2008), Porto, Portugal, pp. 5–12.
+          > Published in Proceedings of 5th Annual Future Business Technology Conference, Porto, Portugal.
         """
     )
 
-    st.markdown("### 2. Preprocessing & Leakage Elimination")
+    st.markdown("### 2. How the Computer Was Prepared (Preprocessing)")
     st.markdown(
         """
-        1. **Feature Separation:**
-           - **Numeric features (13 attributes):** `age`, `Medu`, `Fedu`, `traveltime`, `studytime`, `failures`, `famrel`, `freetime`, `goout`, `Dalc`, `Walc`, `health`, `absences`.
-           - **Categorical features (17 attributes):** `school`, `sex`, `address`, `famsize`, `Pstatus`, `Mjob`, `Fjob`, `reason`, `guardian`, `schoolsup`, `famsup`, `paid`, `activities`, `nursery`, `higher`, `internet`, `romantic`.
-        2. **Pipeline Construction:**
-           - `StandardScaler()` applied to numeric features.
-           - `OneHotEncoder(handle_unknown='ignore', sparse_output=False)` applied to categorical features.
-           - All transformers were bundled inside a scikit-learn `Pipeline` alongside the estimator to guarantee that transformations were **strictly fit on training partitions only**.
-        3. **Data Leakage Mitigation:**
-           - Intermediate trimester marks ($G1$ and $G2$) and final score ($G3$) were removed prior to feature processing.
+        1. **Standardizing Numbers (`StandardScaler`):**  
+           Age is around 15–22, while study time is 1–4, and absences can be 0–32. 
+           We put all numbers on a standardized zero-centered scale so algorithms like KNN don't get confused by big numbers.
+        2. **Translating Words into Numbers (`OneHotEncoder`):**  
+           Computers only understand numbers, not words like `"yes"` or `"no"`. 
+           We turn categories into 0s and 1s safely.
+        3. **No Cheating Pipeline:**  
+           The scaler and encoder were fitted **strictly on the 519 training students**, 
+           meaning the computer never got a peek at the 130 test students beforehand.
         """
     )
 
-    st.markdown("### 3. Evaluation Metric Definitions")
+    st.markdown("### 3. How to Reproduce These Results Yourself")
     st.markdown(
         """
-        - **Accuracy:** Proportion of overall correct classifications: $\\frac{TP + TN}{TP + TN + FP + FN}$.
-        - **Precision (Positive Class):** $\\frac{TP}{TP + FP}$. Measures how many students predicted to pass actually passed.
-        - **Recall (Positive Class):** $\\frac{TP}{TP + FN}$. Measures the proportion of passing students correctly recognized.
-        - **F1-Score:** Harmonic mean of precision and recall: $2 \\cdot \\frac{Precision \\cdot Recall}{Precision + Recall}$.
-        - **Macro F1:** Unweighted average of F1 scores across both Class 0 and Class 1, highlighting minority class performance.
-        - **ROC-AUC:** Area under the Receiver Operating Characteristic curve, measuring separation ability across all decision thresholds.
-        - **5-Fold Stratified Cross-Validation:** The training set ($N=519$) is divided into 5 stratified folds. The model is trained on 4 folds and tested on the 5th, repeated 5 times to compute mean and standard deviation.
-        """
-    )
-
-    st.markdown("### 4. Reproducibility Configuration")
-    st.markdown(
-        """
-        - **Random Seed:** Fixed at `42` across dataset partitioning, k-fold splits, and stochastic estimators.
-        - **Python Version:** 3.12
-        - **Core Libraries:** `scikit-learn>=1.5.0`, `pandas>=2.2.0`, `plotly>=6.0.0`, `streamlit>=1.40.0`.
-        - **Repository Structure:**
-          - `app.py`: Streamlit dashboard
-          - `src/data_loader.py`: Download & preprocessing pipeline
-          - `src/models.py`: Pipeline definitions & estimator registry
-          - `src/evaluation.py`: Metric computation, CV, error analysis, experiments
-          - `src/report_generator.py`: Automated report generator
-          - `run_experiments.py`: Headless CLI evaluation script
-          - `report/results_summary.md`: Auto-generated academic findings report
+        - **Random Seed:** Locked at `42` so if you run this on any computer in the world, you get the exact same results.
+        - **Command to run experiments in terminal:** `python run_experiments.py`
+        - **Command to run unit tests:** `python -m unittest tests/test_pipeline.py`
+        - **Command to launch this app:** `streamlit run app.py`
         """
     )
